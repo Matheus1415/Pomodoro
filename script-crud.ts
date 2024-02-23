@@ -34,6 +34,13 @@ const selecionarTarefa = (estado: EstadoAplicacao, tarefa: Tarefa) : EstadoAplic
     }
 }
 
+const adicionarTarefa = (estado: EstadoAplicacao, tarefa: Tarefa) : EstadoAplicacao => {
+    return {
+        ...estado,
+        tarefas: [...estado.tarefas, tarefa]
+    }
+}
+
 const atualizarUI = () => {
     const taskIconSvg = `
         <svg class="app__section-task-icon-status" width="24" height="24" viewBox="0 0 24 24"
@@ -44,17 +51,27 @@ const atualizarUI = () => {
                 fill="#01080E" />
         </svg>
     `
-    const ulTarefas = document.querySelector('.app__section-task-list');
-    const formAdicionarTarefas = document.querySelector<HTMLFormElement>("app__form-add-task");
-    const btnAdicionarTarefas = document.querySelector<HTMLButtonElement>("app__button-add-task");
-    const texteareas = document.querySelector<HTMLTextAreaElement>("")
+    const ulTarefas = document.querySelector('.app__section-task-list')
+    const formAdicionarTarefa = document.querySelector<HTMLFormElement>('.app__form-add-task')
+    const btnAdicionarTarefa = document.querySelector<HTMLButtonElement>('.app__button--add-task')
+    const textarea = document.querySelector<HTMLTextAreaElement>('.app__form-textarea')
 
-    if(!btnAdicionarTarefas){
-        throw new Error("Caro colega, o elemento botão não foi encontardo")
+    if (!btnAdicionarTarefa) {
+        throw Error("Caro colega, o elemento btnAdicionarTarefa não foi encontrado. Favor rever.")
     }
 
-    btnAdicionarTarefas.onclick = () =>{
-        formAdicionarTarefas.classList.toggle("hidden");
+    btnAdicionarTarefa.onclick = () => {
+        formAdicionarTarefa?.classList.toggle('hidden')
+    }
+
+    formAdicionarTarefa!.onsubmit = (evento) => {
+        evento.preventDefault()
+        const descricao = textarea!.value
+        estadoInicial = adicionarTarefa(estadoInicial, { 
+            descricao,
+            concluida: false
+        })
+        atualizarUI()
     }
 
     if (ulTarefas) {
@@ -66,7 +83,6 @@ const atualizarUI = () => {
         li.classList.add('app__section-task-list-item')
         const svgIcon = document.createElement('svg')
         svgIcon.innerHTML = taskIconSvg
-
         
         const paragraph = document.createElement('p')
         paragraph.classList.add('app__section-task-list-item-description')
@@ -90,6 +106,14 @@ const atualizarUI = () => {
         li.appendChild(paragraph)
         li.appendChild(button)
 
+        li.addEventListener('click', () => {
+            console.log('A tarefa foi clicada', tarefa)
+           estadoInicial = selecionarTarefa(estadoInicial, tarefa)
+           atualizarUI()
+        })
+
         ulTarefas?.appendChild(li)
     })
 }
+
+atualizarUI()

@@ -1,3 +1,4 @@
+"use strict";
 let estadoInicial = {
     tarefas: [
         {
@@ -16,10 +17,10 @@ let estadoInicial = {
     tarefaSelecionada: null
 };
 const selecionarTarefa = (estado, tarefa) => {
-    return {
-        ...estado,
-        tarefaSelecionada: tarefa === estado.tarefaSelecionada ? null : tarefa
-    };
+    return Object.assign(Object.assign({}, estado), { tarefaSelecionada: tarefa === estado.tarefaSelecionada ? null : tarefa });
+};
+const adicionarTarefa = (estado, tarefa) => {
+    return Object.assign(Object.assign({}, estado), { tarefas: [...estado.tarefas, tarefa] });
 };
 const atualizarUI = () => {
     const taskIconSvg = `
@@ -32,14 +33,23 @@ const atualizarUI = () => {
         </svg>
     `;
     const ulTarefas = document.querySelector('.app__section-task-list');
-    const formAdicionarTarefas = document.querySelector("app__form-add-task");
-    const btnAdicionarTarefas = document.querySelector("app__button-add-task");
-    const texteareas = document.querySelector("");
-    if (!btnAdicionarTarefas) {
-        throw new Error("Caro colega, o elemento botão não foi encontardo");
+    const formAdicionarTarefa = document.querySelector('.app__form-add-task');
+    const btnAdicionarTarefa = document.querySelector('.app__button--add-task');
+    const textarea = document.querySelector('.app__form-textarea');
+    if (!btnAdicionarTarefa) {
+        throw Error("Caro colega, o elemento btnAdicionarTarefa não foi encontrado. Favor rever.");
     }
-    btnAdicionarTarefas.onclick = () => {
-        formAdicionarTarefas.classList.toggle("hidden");
+    btnAdicionarTarefa.onclick = () => {
+        formAdicionarTarefa === null || formAdicionarTarefa === void 0 ? void 0 : formAdicionarTarefa.classList.toggle('hidden');
+    };
+    formAdicionarTarefa.onsubmit = (evento) => {
+        evento.preventDefault();
+        const descricao = textarea.value;
+        estadoInicial = adicionarTarefa(estadoInicial, {
+            descricao,
+            concluida: false
+        });
+        atualizarUI();
     };
     if (ulTarefas) {
         ulTarefas.innerHTML = '';
@@ -64,6 +74,12 @@ const atualizarUI = () => {
         li.appendChild(svgIcon);
         li.appendChild(paragraph);
         li.appendChild(button);
-        ulTarefas?.appendChild(li);
+        li.addEventListener('click', () => {
+            console.log('A tarefa foi clicada', tarefa);
+            estadoInicial = selecionarTarefa(estadoInicial, tarefa);
+            atualizarUI();
+        });
+        ulTarefas === null || ulTarefas === void 0 ? void 0 : ulTarefas.appendChild(li);
     });
 };
+atualizarUI();

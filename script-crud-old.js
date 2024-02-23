@@ -8,7 +8,9 @@ const btnCancelar = document.querySelector('.app__form-footer__button--cancel')
 const btnDeletar = document.querySelector('.app__form-footer__button--delete')
 
 const btnDeletarConcluidas = document.querySelector('#btn-remover-concluidas')
-const btnDeletarTodas = document.querySelector('#btn-remover-todas')
+const btnDeletarTodas
+
+= document.querySelector('#btn-remover-todas')
 
 const formLabel = document.querySelector('.app__form-label')
 
