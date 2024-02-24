@@ -98,19 +98,18 @@ const atualizarUI = () => {
         li.appendChild(svgIcon);
         li.appendChild(paragraph);
         li.appendChild(button);
-        li.addEventListener('click', e => {
+        li.addEventListener('click', () => {
             console.log('A tarefa foi clicada', tarefa);
-            let btnAtualizar = document.querySelector(".app__form-footer__button--confirm");
             formAdicionarTarefa === null || formAdicionarTarefa === void 0 ? void 0 : formAdicionarTarefa.classList.remove("hidden");
-            // Encontrar o índice da tarefa clicada no array de tarefas
+            let btnAtualizar = document.querySelector(".app__form-footer__button--confirm");
             const indiceTarefaSelecionada = estadoInicial.tarefas.indexOf(tarefa);
             const valorTarefaSelecionada = estadoInicial.tarefas[indiceTarefaSelecionada].descricao;
-            // Atribuir o valor da tarefa ao valor do textarea
             textarea.value = valorTarefaSelecionada.toString();
             btnAtualizar.onclick = () => {
                 // Atualizar o estado com a tarefa selecionada
                 estadoInicial.tarefas[indiceTarefaSelecionada].descricao = textarea.value;
                 atualizarUI();
+                formAdicionarTarefa === null || formAdicionarTarefa === void 0 ? void 0 : formAdicionarTarefa.classList.add("hidden"); // Para esconder o formulário após a atualização
             };
         });
         ulTarefas === null || ulTarefas === void 0 ? void 0 : ulTarefas.appendChild(li);
