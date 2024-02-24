@@ -51,27 +51,54 @@ const atualizarUI = () => {
                 fill="#01080E" />
         </svg>
     `
-    const ulTarefas = document.querySelector('.app__section-task-list')
-    const formAdicionarTarefa = document.querySelector<HTMLFormElement>('.app__form-add-task')
-    const btnAdicionarTarefa = document.querySelector<HTMLButtonElement>('.app__button--add-task')
-    const textarea = document.querySelector<HTMLTextAreaElement>('.app__form-textarea')
+    const ulTarefas = document.querySelector('.app__section-task-list');
+    const formAdicionarTarefa = document.querySelector<HTMLFormElement>('.app__form-add-task');
+    const btnAdicionarTarefa = document.querySelector<HTMLButtonElement>('.app__button--add-task');
+    const textarea = document.querySelector<HTMLTextAreaElement>('.app__form-textarea');
+    const btnCancelar = document.querySelector<HTMLButtonElement>(".app__form-footer__button--cancel");
+    const btnDeletar = document.querySelector<HTMLButtonElement>(".app__form-footer__button--delete");
+
 
     if (!btnAdicionarTarefa) {
         throw Error("Caro colega, o elemento btnAdicionarTarefa não foi encontrado. Favor rever.")
+    }
+
+    if (!btnCancelar) {
+        throw Error("Caro colega, o elemento btncancelar não foi encontrado. Favor rever.")
+    }
+
+    if (!btnDeletar) {
+        throw Error("Caro colega, o elemento btnDeletar não foi encontrado. Favor rever.")
     }
 
     btnAdicionarTarefa.onclick = () => {
         formAdicionarTarefa?.classList.toggle('hidden')
     }
 
+    btnCancelar.onclick = () =>{
+        console.log("cancelar clicado")
+        formAdicionarTarefa!.classList.add("hidden")
+    }
+
+    btnDeletar.onclick = () => {
+        textarea!.value = ''
+    };
+
+    const formLimparEFechar = () =>{
+        formAdicionarTarefa?.reset()
+        //Opcional
+        // formAdicionarTarefa!.classList.add("hidden")
+    }
+
     formAdicionarTarefa!.onsubmit = (evento) => {
         evento.preventDefault()
-        const descricao = textarea!.value
+        let descricao = textarea!.value
         estadoInicial = adicionarTarefa(estadoInicial, { 
             descricao,
             concluida: false
         })
         atualizarUI()
+        formLimparEFechar()
     }
 
     if (ulTarefas) {
@@ -94,6 +121,9 @@ const atualizarUI = () => {
     
         const editIcon = document.createElement('img')
         editIcon.setAttribute('src', '/imagens/edit.png')
+        editIcon.onclick = () =>{
+            formAdicionarTarefa?.classList.toggle('hidden')
+        }
     
         button.appendChild(editIcon)
 
@@ -106,11 +136,25 @@ const atualizarUI = () => {
         li.appendChild(paragraph)
         li.appendChild(button)
 
-        li.addEventListener('click', () => {
-            console.log('A tarefa foi clicada', tarefa)
-           estadoInicial = selecionarTarefa(estadoInicial, tarefa)
-           atualizarUI()
-        })
+        li.addEventListener('click', e => {
+            console.log('A tarefa foi clicada', tarefa);
+            let btnAtualizar = document.querySelector<HTMLButtonElement>(".app__form-footer__button--confirm") 
+            formAdicionarTarefa?.classList.remove("hidden");
+        
+            // Encontrar o índice da tarefa clicada no array de tarefas
+            const indiceTarefaSelecionada = estadoInicial.tarefas.indexOf(tarefa);
+            const valorTarefaSelecionada = estadoInicial.tarefas[indiceTarefaSelecionada].descricao;
+        
+            // Atribuir o valor da tarefa ao valor do textarea
+            textarea!.value = valorTarefaSelecionada.toString();
+        
+            btnAtualizar!.onclick = () => {
+                // Atualizar o estado com a tarefa selecionada
+                estadoInicial.tarefas[indiceTarefaSelecionada].descricao = textarea!.value;
+                atualizarUI();
+            };
+        });        
+        
 
         ulTarefas?.appendChild(li)
     })

@@ -36,20 +36,41 @@ const atualizarUI = () => {
     const formAdicionarTarefa = document.querySelector('.app__form-add-task');
     const btnAdicionarTarefa = document.querySelector('.app__button--add-task');
     const textarea = document.querySelector('.app__form-textarea');
+    const btnCancelar = document.querySelector(".app__form-footer__button--cancel");
+    const btnDeletar = document.querySelector(".app__form-footer__button--delete");
     if (!btnAdicionarTarefa) {
         throw Error("Caro colega, o elemento btnAdicionarTarefa não foi encontrado. Favor rever.");
+    }
+    if (!btnCancelar) {
+        throw Error("Caro colega, o elemento btncancelar não foi encontrado. Favor rever.");
+    }
+    if (!btnDeletar) {
+        throw Error("Caro colega, o elemento btnDeletar não foi encontrado. Favor rever.");
     }
     btnAdicionarTarefa.onclick = () => {
         formAdicionarTarefa === null || formAdicionarTarefa === void 0 ? void 0 : formAdicionarTarefa.classList.toggle('hidden');
     };
+    btnCancelar.onclick = () => {
+        console.log("cancelar clicado");
+        formAdicionarTarefa.classList.add("hidden");
+    };
+    btnDeletar.onclick = () => {
+        textarea.value = '';
+    };
+    const formLimparEFechar = () => {
+        formAdicionarTarefa === null || formAdicionarTarefa === void 0 ? void 0 : formAdicionarTarefa.reset();
+        //Opcional
+        // formAdicionarTarefa!.classList.add("hidden")
+    };
     formAdicionarTarefa.onsubmit = (evento) => {
         evento.preventDefault();
-        const descricao = textarea.value;
+        let descricao = textarea.value;
         estadoInicial = adicionarTarefa(estadoInicial, {
             descricao,
             concluida: false
         });
         atualizarUI();
+        formLimparEFechar();
     };
     if (ulTarefas) {
         ulTarefas.innerHTML = '';
@@ -66,6 +87,9 @@ const atualizarUI = () => {
         button.classList.add('app_button-edit');
         const editIcon = document.createElement('img');
         editIcon.setAttribute('src', '/imagens/edit.png');
+        editIcon.onclick = () => {
+            formAdicionarTarefa === null || formAdicionarTarefa === void 0 ? void 0 : formAdicionarTarefa.classList.toggle('hidden');
+        };
         button.appendChild(editIcon);
         if (tarefa.concluida) {
             button.setAttribute('disabled', 'true');
@@ -74,10 +98,20 @@ const atualizarUI = () => {
         li.appendChild(svgIcon);
         li.appendChild(paragraph);
         li.appendChild(button);
-        li.addEventListener('click', () => {
+        li.addEventListener('click', e => {
             console.log('A tarefa foi clicada', tarefa);
-            estadoInicial = selecionarTarefa(estadoInicial, tarefa);
-            atualizarUI();
+            let btnAtualizar = document.querySelector(".app__form-footer__button--confirm");
+            formAdicionarTarefa === null || formAdicionarTarefa === void 0 ? void 0 : formAdicionarTarefa.classList.remove("hidden");
+            // Encontrar o índice da tarefa clicada no array de tarefas
+            const indiceTarefaSelecionada = estadoInicial.tarefas.indexOf(tarefa);
+            const valorTarefaSelecionada = estadoInicial.tarefas[indiceTarefaSelecionada].descricao;
+            // Atribuir o valor da tarefa ao valor do textarea
+            textarea.value = valorTarefaSelecionada.toString();
+            btnAtualizar.onclick = () => {
+                // Atualizar o estado com a tarefa selecionada
+                estadoInicial.tarefas[indiceTarefaSelecionada].descricao = textarea.value;
+                atualizarUI();
+            };
         });
         ulTarefas === null || ulTarefas === void 0 ? void 0 : ulTarefas.appendChild(li);
     });
