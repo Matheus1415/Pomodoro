@@ -16,12 +16,12 @@ Para utilizar o Comodoro, siga estas etapas:
 
 1. Clone este repositório:
     ```bash
-    git clone https://github.com/seu-usuario/comodoro.git
+    git clone https://github.com/Matheus1415/Comodoro
     ```
 
 2. Instale as dependências:
     ```bash
-    cd comodoro
+    cd Comodoro
     npm install
     ```
 
