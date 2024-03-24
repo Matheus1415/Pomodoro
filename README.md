@@ -7,9 +7,8 @@ O Comodoro é um projeto simples desenvolvido com HTML, CSS, TypeScript e JavaSc
 - Criação de lista de tarefas ✏️
 - Cronômetro para cada tarefa ⏱️
 - Marcação automática da tarefa principal quando o tempo acabar ✅
-</br>
+
 ![Foto do site Comodoro](https://github.com/Matheus1415/Comodoro/blob/main/FotoReadme.png)
-</br>
 
 ## Como usar
 
